@@ -34,6 +34,9 @@ chrome_options.add_argument("--headless")  # Run in headless mode
 chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration
 chrome_options.add_argument("--no-sandbox")  # Avoid using the sandbox
 chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
+chrome_options.add_argument("--remote-debugging-port=9222")  # Enable remote debugging
+chrome_options.add_argument("--disable-software-rasterizer")  # Disable the software rasterizer
+
 
 service = Service()
 driver = webdriver.Chrome(service=service, options=chrome_options)
