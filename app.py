@@ -18,21 +18,23 @@ def process_json():
 
     try:
         # Call the Selenium script with the JSON data
-        subprocess.run(
-            ['python', 'selenium_script.py', json.dumps(data)],
-            capture_output=True, text=True
-        )
+        result = subprocess.run(
+    ['python', 'selenium_script.py', json.dumps(data)],
+    capture_output=True, text=True, timeout=120  # Adjust as needed
+)
+
+ 
 
         # Read the JSON file created by the Selenium script
         if os.path.exists('image_urls.json'):
             with open('image_urls.json', 'r') as f:
                 image_urls = json.load(f)
         else:
-            image_urls = {"error": "No image URLs found."}
+            image_urls = {"error": "No image URLs found."} 
 
     except Exception as e:
         image_urls = {"error": f"Failed to process Selenium script: {e}"}
-    
+        
     finally:
         # Ensure the data.json and image_urls.json files are deleted after processing
         if os.path.exists('data.json'):
@@ -43,4 +45,6 @@ def process_json():
     return jsonify(image_urls)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # For production deployment, remove or comment out app.run()
+    # app.run(debug=True)
+    app.run(host="0.0.0.0", port=80)

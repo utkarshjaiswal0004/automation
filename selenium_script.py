@@ -9,13 +9,14 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 
 # Path to your ChromeDriver executable
-chrome_driver_path = '/Users/utkarshjaiswal/Desktop/techonpixel/projects/Stitch/python/automation/chromedriver/chromedriver'
+chrome_driver_path = './chromedriver/chromedriver'
 
 # Configure WebDriver
 chrome_options = Options()
 chrome_options.add_argument("--headless")  # Run in headless mode
 chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration
 chrome_options.add_argument("--no-sandbox")  # Avoid using the sandbox
+chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
 
 service = Service(chrome_driver_path)
 driver = webdriver.Chrome(service=service, options=chrome_options)
@@ -28,19 +29,17 @@ def log_image_urls():
         # Retry mechanism for locating the body div
         for _ in range(3):
             try:
-                body_div = WebDriverWait(driver, 4).until(
+                body_div = WebDriverWait(driver, 10).until(
                     EC.presence_of_element_located(body_div_locator)
                 )
                 break
-            except Exception as e:
-                print(f"Error locating body div: {e}")
+            except Exception as e: 
                 time.sleep(2)
-        else:
-            print("Failed to locate the body div after retries.")
+        else: 
             return {}
 
         # Find all image elements
-        image_elements = WebDriverWait(body_div, 4).until(
+        image_elements = WebDriverWait(body_div, 10).until(
             EC.presence_of_all_elements_located((By.TAG_NAME, 'img'))
         )
 
@@ -53,8 +52,7 @@ def log_image_urls():
         
         return image_urls
     
-    except Exception as e:
-        print(f"An error occurred: {e}")
+    except Exception as e: 
         return {}
 
 def save_default_info(measurements):
@@ -65,39 +63,36 @@ def save_default_info(measurements):
               const measurements = {json.dumps(measurements)};
               localStorage.setItem('styleme_measurement', JSON.stringify(measurements));
                """
-        driver.execute_script(js_script)
-        print("Measurement data saved in localStorage.")
+        driver.execute_script(js_script) 
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"An error occurred while saving measurements: {e}")
 
 if __name__ == "__main__":
     # Read JSON data passed as a command-line argument
-    if len(sys.argv) != 2:
-        print("Usage: python selenium_script.py '<json_data>'")
+    if len(sys.argv) != 2: 
         sys.exit(1)
 
     json_data_str = sys.argv[1]
     try:
         measurements = json.loads(json_data_str)
-    except json.JSONDecodeError as e:
-        print(f"Failed to decode JSON data: {e}")
+    except json.JSONDecodeError as e: 
         sys.exit(1)
 
     try:
         save_default_info(measurements)
         driver.get('https://demo.style.me/')
 
-        open_button = WebDriverWait(driver, 4).until(
+        open_button = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, 'div.style-me-open-button'))
         )
         open_button.click()
 
-        iframe = WebDriverWait(driver, 4).until(
+        iframe = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, 'iframe.style-me-fittingroom'))
         )
         driver.switch_to.frame(iframe)
 
-        # Allow time for the iframe content to load, if needed
+        # Allow time for the iframe content to load
         time.sleep(3)
 
         image_urls = log_image_urls()
