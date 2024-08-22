@@ -30,7 +30,7 @@ def process_json():
             with open('image_urls.json', 'r') as f:
                 image_urls = json.load(f)
         else:
-            image_urls = {"error": "No image URLs found."} 
+            image_urls = {"error": "No image URLs found."}
 
     except Exception as e:
         image_urls = {"error": f"Failed to process Selenium script: {e}"}

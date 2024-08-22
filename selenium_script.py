@@ -8,8 +8,25 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
-# Path to your ChromeDriver executable
-chrome_driver_path = './chromedriver/chromedriver'
+import chromedriver_autoinstaller
+
+# chromedriver_autoinstaller.install()
+
+# # Path to your ChromeDriver executable
+# chrome_driver_path = './chromedriver/chromedriver'
+
+# # Configure WebDriver
+# chrome_options = Options()
+# chrome_options.add_argument("--headless")  # Run in headless mode
+# chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration
+# chrome_options.add_argument("--no-sandbox")  # Avoid using the sandbox
+# chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
+
+# service = Service(chrome_driver_path)
+# driver = webdriver.Chrome(service=service, options=chrome_options)
+
+# Automatically install the ChromeDriver
+chromedriver_autoinstaller.install()
 
 # Configure WebDriver
 chrome_options = Options()
@@ -18,7 +35,7 @@ chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration
 chrome_options.add_argument("--no-sandbox")  # Avoid using the sandbox
 chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
 
-service = Service(chrome_driver_path)
+service = Service()
 driver = webdriver.Chrome(service=service, options=chrome_options)
 
 def log_image_urls():
